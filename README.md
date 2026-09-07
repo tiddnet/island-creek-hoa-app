@@ -11,6 +11,10 @@ the repo safe to make public (required for free GitHub Pages) even though
 the data it displays isn't public in the same durable, permanent way a git
 history is.
 
+See **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** for the full
+walkthrough — request flow end to end, the Firestore data model, why the
+two-repo split exists, and the planned auth approach.
+
 ## Layout
 
 ```
@@ -63,15 +67,11 @@ This overwrites all 16 `roster` docs from that file. It does not touch
 ## Current security posture (bootstrap phase)
 
 Both `roster` and `meetings` are currently world-read-write in
-`firestore.rules` — anyone with the site URL (not indexed, not linked
-publicly, but not access-controlled either) could read or edit the data.
-That's what makes the live roll-call work with zero backend/auth code today.
-
-**Before this tool has more than one real user, or before its URL is
-shared beyond the HOA board:** add Firebase Auth (e.g. email allowlist for
-board members) and tighten `firestore.rules` so `meetings` writes require
-`request.auth.uid` in that allowlist, and `roster` writes are blocked
-entirely (admin-only, via the seed script).
+`firestore.rules` — anyone with the site URL could read or edit the data.
+That's a deliberate, temporary tradeoff (see
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#current-security-posture-and-the-auth-plan)
+for the reasoning and the planned Firebase Auth rollout once this tool has
+more than one real user).
 
 ## Local development
 
