@@ -73,6 +73,7 @@ td.chk{text-align:center;}
 .cb{
   appearance:none;width:24px;height:24px;border:2px solid var(--rule-strong);border-radius:6px;
   cursor:pointer;position:relative;background:var(--paper);vertical-align:middle;
+  print-color-adjust:exact;-webkit-print-color-adjust:exact;
 }
 .cb:checked{background:var(--good);border-color:var(--good);}
 .cb:checked::after{
@@ -139,4 +140,9 @@ button.reset:hover{background:var(--accent-soft);color:var(--ink);}
   .quorum-print-value{display:inline;}
   .card{border:1px solid #999;}
   .cb{border-color:#333;}
+  /* Belt-and-suspenders: some print pipelines drop background colors even
+     with print-color-adjust:exact, which would make the white checkmark
+     invisible against a white box. Draw it in solid black instead, so a
+     checked box is legible with or without the green fill printing. */
+  .cb:checked::after{border-color:#000;}
 }
