@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Island Creek HOA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <h1>Island Creek HOA</h1>
+  <p class="subtitle">Island Creek Ct / Island Creek Dr, Avon NC.</p>
+
+  <nav class="tools">
+    <a href="index.html" class="tool-link active">Directory</a>
+    <a href="roll-call.html" class="tool-link">Meeting roll call</a>
+  </nav>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr><th>Address</th><th>Owner</th><th>House</th></tr>
+      </thead>
+      <tbody id="rows">
+        <tr><td colspan="3" class="loading">Loading roster…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="note">
+    Owner names are from Dare County's public tax parcel records. "House" is
+    the short-term-rental name where the lot is currently listed with a
+    property manager — blank where it's owner-occupied, self-managed, or not
+    confidently matched.
+  </p>
+</div>
+
+<script type="module" src="js/config.js"></script>
+<script type="module" src="js/directory.js"></script>
+</body>
+</html>

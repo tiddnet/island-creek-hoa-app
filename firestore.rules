@@ -1,0 +1,27 @@
+rules_version = '2';
+
+// Paste this into Firebase Console -> Firestore Database -> Rules -> Publish.
+//
+// Current posture (bootstrap phase, single trusted operator, URL not yet
+// shared beyond the HOA): both `roster` and `meetings` are world-read-write.
+// That's what makes the seed script and live multi-device roll-call work
+// with zero backend code -- anyone with the site URL could currently edit
+// ownership data or an attendance record.
+//
+// TODO once this tool has more than one real user or the URL becomes
+// widely known: add Firebase Auth (e.g. a board member allowlist), lock
+// `roster` writes to an admin-only path, and require request.auth.uid in
+// that allowlist for `meetings` writes.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /roster/{lot} {
+      allow read, write: if true;
+    }
+    match /meetings/{date} {
+      allow read, write: if true;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

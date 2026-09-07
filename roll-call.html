@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Island Creek Roll Call</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <h1>Island Creek HOA — meeting roll call</h1>
+  <p class="meeting-date" id="meeting-date"></p>
+  <p class="subtitle">Island Creek Ct / Island Creek Dr, Avon NC. North → south. Check off owners as they arrive — updates live for anyone else with this page open.</p>
+
+  <nav class="tools">
+    <a href="index.html" class="tool-link">Directory</a>
+    <a href="roll-call.html" class="tool-link active">Meeting roll call</a>
+  </nav>
+
+  <div class="quorum-bar">
+    <div class="quorum-count">
+      <span class="live-dot" title="Live — synced across devices"></span>
+      <span class="n" id="present-n">0</span><span class="of" id="present-of">of 16 present</span>
+    </div>
+    <span class="quorum-status not-met" id="quorum-status">quorum not met</span>
+    <div class="quorum-config">
+      <label for="quorum-input">Quorum needs</label>
+      <input type="number" id="quorum-input" min="1" max="16" value="9">
+      <span class="quorum-print-value" id="quorum-print-value"></span>
+      <span>of 16</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr><th>Address</th><th>Owner</th><th>House</th><th class="chk">Present</th></tr>
+      </thead>
+      <tbody id="rows">
+        <tr><td colspan="4" class="loading">Loading roster…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="actions">
+    <button class="print" id="print-btn">Print / save this roll call</button>
+    <button class="reset" id="reset-btn">Clear all check-ins</button>
+  </div>
+
+  <p class="note">
+    16 owner lots on Island Creek Ct/Dr. The date above is read from your
+    device's clock — each calendar day gets its own shared roll call, stored
+    in Firestore, so everyone with this link on the same day sees and can
+    check off the same live sheet. Reopening on a later date starts a fresh
+    sheet automatically. Use "Print / save" (your browser's print dialog —
+    choose "Save as PDF" for a digital copy) to keep a permanent record of
+    each meeting.
+  </p>
+</div>
+
+<script type="module" src="js/config.js"></script>
+<script type="module" src="js/roll-call.js"></script>
+</body>
+</html>
