@@ -44,6 +44,14 @@
     </table>
   </div>
 
+  <h2 class="motions-h">Motions &amp; votes</h2>
+  <p class="subtitle">Only owners checked present above can vote. One vote per lot. Updates live.</p>
+  <form class="motion-add" id="motion-form">
+    <input type="text" id="motion-text" placeholder="Motion text (e.g. Approve 2027 budget)" maxlength="300" required>
+    <button type="submit" class="print">Add motion</button>
+  </form>
+  <div id="motions"></div>
+
   <div class="actions">
     <button class="print" id="print-btn">Print / save this roll call</button>
     <button class="reset" id="reset-btn">Clear all check-ins</button>

@@ -1,7 +1,7 @@
 import { db } from "./firebase-init.js";
 import {
   collection, getDocs, query, orderBy,
-  doc, setDoc, onSnapshot,
+  doc, setDoc, updateDoc, deleteField, onSnapshot,
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 // Meeting date comes from the device clock, not a hardcoded value -- each
@@ -61,6 +61,95 @@ document.getElementById("reset-btn").addEventListener("click", () => {
   setDoc(meetingRef, { checked: {} }, { merge: true });
 });
 
+// ---- Motions & votes -------------------------------------------------------
+// meetings/{date}.motions = { <id>: { text, created, votes: { <address>: "yes"|"no"|"abstain" } } }
+const motionsEl = document.getElementById("motions");
+let latestData = {};
+
+document.getElementById("motion-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const input = document.getElementById("motion-text");
+  const text = input.value.trim();
+  if (!text) return;
+  const id = "m" + Date.now();
+  setDoc(meetingRef, { motions: { [id]: { text, created: Date.now(), votes: {} } } }, { merge: true });
+  input.value = "";
+});
+
+function castVote(id, address, choice, current) {
+  // Clicking the active choice clears the vote.
+  const value = current === choice ? deleteField() : choice;
+  updateDoc(meetingRef, { [`motions.${id}.votes.${address}`]: value });
+}
+
+function renderMotions(data) {
+  const checked = data.checked || {};
+  const motions = Object.entries(data.motions || {}).sort((a, b) => a[1].created - b[1].created);
+  const presentOwners = roster.filter((r) => checked[r.address]);
+  motionsEl.replaceChildren();
+  if (motions.length === 0) {
+    const p = document.createElement("p");
+    p.className = "note";
+    p.textContent = "No motions yet.";
+    motionsEl.appendChild(p);
+    return;
+  }
+  motions.forEach(([id, m], i) => {
+    const votes = m.votes || {};
+    const count = (c) => presentOwners.filter((r) => votes[r.address] === c).length;
+    const yes = count("yes"), no = count("no"), abs = count("abstain");
+    const pending = presentOwners.length - yes - no - abs;
+
+    const card = document.createElement("div");
+    card.className = "card motion";
+    const head = document.createElement("div");
+    head.className = "motion-head";
+    const title = document.createElement("div");
+    title.className = "motion-title";
+    title.textContent = `${i + 1}. ${m.text}`;
+    const tally = document.createElement("div");
+    tally.className = "motion-tally";
+    tally.textContent = `Yes ${yes} · No ${no} · Abstain ${abs} · Not voted ${pending}`;
+    const del = document.createElement("button");
+    del.className = "reset motion-del";
+    del.textContent = "Remove";
+    del.addEventListener("click", () => {
+      if (!confirm("Remove this motion and its votes for everyone?")) return;
+      updateDoc(meetingRef, { [`motions.${id}`]: deleteField() });
+    });
+    head.append(title, tally, del);
+    card.appendChild(head);
+
+    const list = document.createElement("div");
+    list.className = "vote-list";
+    if (presentOwners.length === 0) {
+      list.textContent = "Check owners present above to enable voting.";
+    }
+    for (const r of presentOwners) {
+      const row = document.createElement("div");
+      row.className = "vote-row";
+      const who = document.createElement("span");
+      who.className = "vote-who";
+      who.textContent = `${r.address} — ${r.owner}`;
+      row.appendChild(who);
+      const btns = document.createElement("span");
+      btns.className = "vote-btns";
+      for (const c of ["yes", "no", "abstain"]) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "vote-btn " + c + (votes[r.address] === c ? " on" : "");
+        b.textContent = c === "abstain" ? "Abstain" : c[0].toUpperCase() + c.slice(1);
+        b.addEventListener("click", () => castVote(id, r.address, c, votes[r.address]));
+        btns.appendChild(b);
+      }
+      row.appendChild(btns);
+      list.appendChild(row);
+    }
+    card.appendChild(list);
+    motionsEl.appendChild(card);
+  });
+}
+
 // Live render -- fires immediately with current data, then again on every
 // change from any device with this page open.
 onSnapshot(meetingRef, (snap) => {
@@ -82,6 +171,9 @@ onSnapshot(meetingRef, (snap) => {
     const cb = tr.querySelector(".cb");
     if (cb && cb !== document.activeElement) cb.checked = isChecked;
   }
+
+  latestData = data;
+  renderMotions(data);
 
   presentN.textContent = present;
   quorumPrintValue.textContent = quorum;
