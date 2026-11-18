@@ -40,6 +40,7 @@ if (roster.length === 0) {
       <td class="chk"><input type="checkbox" class="cb"></td>
     `;
     const cb = tr.querySelector(".cb");
+    tr.addEventListener("click", (e) => { if (e.target !== cb) cb.click(); });
     cb.addEventListener("change", () => {
       setDoc(meetingRef, { checked: { [r.address]: cb.checked } }, { merge: true });
     });

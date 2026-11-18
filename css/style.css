@@ -160,3 +160,39 @@ button.reset:hover{background:var(--accent-soft);color:var(--ink);}
      checked box is legible with or without the green fill printing. */
   .cb:checked::after{border-color:#000;}
 }
+
+/* ---- Mobile ---------------------------------------------------------- */
+input[type="text"], input[type="number"]{font-size:16px;} /* stops iOS zoom-on-focus */
+@media (max-width:600px){
+  .wrap{padding:20px 14px 60px;}
+  h1{font-size:1.45rem;}
+  .tool-link{flex:1;text-align:center;}
+
+  .quorum-bar{padding:10px 12px;gap:8px;margin-bottom:14px;}
+  .quorum-count .n{font-size:1.7rem;}
+  .quorum-config{width:100%;justify-content:flex-end;}
+
+  /* Roll-call table: drop the House column, stack address over owner,
+     and make the whole row a big tap target (see roll-call.js). */
+  thead th:nth-child(3), tbody td.house{display:none;}
+  thead th, tbody td{padding:12px 10px;}
+  thead th.chk{width:56px;}
+  tbody tr{cursor:pointer;}
+  .cb{width:32px;height:32px;}
+  .cb:checked::after{left:10px;top:4px;width:8px;height:15px;}
+  .addr{white-space:normal;font-size:0.8rem;}
+
+  /* Motions */
+  .motion-add{flex-direction:column;}
+  .motion-add input{padding:12px;}
+  .motion-add button{padding:12px;font-size:0.95rem;}
+  .motion{padding:12px;}
+  .motion-tally{flex:1 1 100%;font-size:12px;}
+  .vote-row{flex-direction:column;align-items:stretch;gap:6px;padding:10px 0;}
+  .vote-btns{width:100%;gap:6px;}
+  .vote-btn{flex:1;min-height:44px;font-size:0.95rem;}
+
+  .actions{flex-direction:column;}
+  button.print, button.reset{padding:12px 14px;font-size:0.9rem;}
+  .motion-del{align-self:flex-start;}
+}
