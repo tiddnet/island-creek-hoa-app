@@ -151,6 +151,25 @@ function renderMotions(data) {
   });
 }
 
+// ---- Meeting notes ---------------------------------------------------------
+// meetings/{date}.notes = string. Last write wins; saves 700ms after typing
+// stops. While this device's box is focused, remote edits are not pulled in
+// (so they can't clobber what's being typed).
+const notesEl = document.getElementById("notes");
+const notesStatus = document.getElementById("notes-status");
+const notesPrint = document.getElementById("notes-print");
+let notesTimer = null;
+notesEl.addEventListener("input", () => {
+  notesStatus.textContent = "Saving…";
+  notesPrint.textContent = notesEl.value;
+  clearTimeout(notesTimer);
+  notesTimer = setTimeout(() => {
+    setDoc(meetingRef, { notes: notesEl.value }, { merge: true })
+      .then(() => { notesStatus.textContent = "Saved"; })
+      .catch(() => { notesStatus.textContent = "Not saved — check connection"; });
+  }, 700);
+});
+
 // Live render -- fires immediately with current data, then again on every
 // change from any device with this page open.
 onSnapshot(meetingRef, (snap) => {
@@ -174,6 +193,10 @@ onSnapshot(meetingRef, (snap) => {
   }
 
   latestData = data;
+  if (document.activeElement !== notesEl) {
+    notesEl.value = data.notes || "";
+    notesPrint.textContent = data.notes || "";
+  }
   renderMotions(data);
 
   presentN.textContent = present;

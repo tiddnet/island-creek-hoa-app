@@ -146,7 +146,12 @@ button.reset:hover{background:var(--accent-soft);color:var(--ink);}
 .vote-btn.on.yes{background:var(--good-bg);color:var(--good);border-color:var(--good);}
 .vote-btn.on.no{background:var(--bad-bg);color:var(--bad);border-color:var(--bad);}
 .vote-btn.on.abstain{background:var(--accent-soft);color:var(--ink);}
+.notes-box{width:100%;padding:12px;border:1px solid var(--rule-strong);border-radius:10px;background:var(--paper);color:var(--ink);font:inherit;font-size:16px;line-height:1.5;resize:vertical;min-height:140px;}
+.notes-status{font-size:0.78rem;color:var(--ink-faint);min-height:1.2em;margin-top:4px;}
+.notes-print{display:none;white-space:pre-wrap;}
 @media print{
+  .notes-box, .notes-status{display:none;}
+  .notes-print{display:block;border:1px solid #999;border-radius:8px;padding:10px;}
   .motion-add, .motion-del, .vote-btn:not(.on){display:none;}
   body{background:#fff;}
   .quorum-bar{position:static;box-shadow:none;border:1px solid #999;}
